@@ -13,7 +13,7 @@ const preset_options: preset.PresetOptions = {
     },
     {
       // entries with '.tsx' extension will have `solid` export condition generated
-      name: 'i18next-context',
+      name: 'i18next',
       entry: 'src/i18next/context.tsx',
       // will generate a separate development entry
       dev_entry: true,

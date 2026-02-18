@@ -1,3 +1,5 @@
 import { I18NextContext } from './i18next/context'
 
-export { I18NextContext }
+export {
+    I18NextContext,
+}

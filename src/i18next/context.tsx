@@ -122,12 +122,10 @@ export const I18NextContext: Component<I18NextContextProps> = (props) => {
     const [loadedSignal, setLoadedSignal] = createSignal<LoadedResources>({});
 
     const languageChangedObserver = (langCode: string) => {
-        //console.log(`@I18NextContext: Language changed to '${langCode}'`);
         setCurrentLanguage(langCode);
     }
 
     const resourceLoadedObserver = (info: LoadedResources) => {
-        //console.log(`@I18NextContext: Resource loaded (current language: '${i18next.language}'):`, JSON.stringify(info));
         for (const langCode in info) {
             if (!(langCode in loadedStore)) {
                 setLoadedStore(langCode, info[langCode]!);
@@ -163,7 +161,6 @@ export const I18NextContext: Component<I18NextContextProps> = (props) => {
 
     const loadNamespace = async (ns: string | string[]) => {
         await i18nextInitPromise;
-        //console.log("@I18NextContext: loading namespace:", ns);
         await i18next.loadNamespaces(ns);
     };
 
@@ -188,7 +185,6 @@ export const I18NextContext: Component<I18NextContextProps> = (props) => {
             }
         }
 
-        console.log("@I18NextContext: Initializing i18next with options:", options);
         i18next.use(HttpApi).init(options);
     });
 
@@ -228,10 +224,6 @@ export const useTranslation = (namespace: string | string[] | undefined = undefi
         throw new Error('useTranslation must be used within an I18NextContext.Provider');
     }
 
-    createEffect(() => {
-        console.log(`@useTranslation: loaded resources changed: `, context.loadedSignal());
-    });
-
     if (namespace) {
         context.loadNamespace(namespace);
     }
@@ -255,6 +247,7 @@ export const useTranslation = (namespace: string | string[] | undefined = undefi
 
     return {
         t: (key: string, options?: any) => {
+
             const allResourcesAvailable = areResourcesLoaded()
 
             // access the resource to create reactivity
@@ -303,4 +296,36 @@ export const LanguageSwitch: Component<LanguagePickerProps> = (props) => {
             )}</For>
         </select>
     )
+}
+
+export type TranslateableProps = ParentProps<{
+    key: string
+    namespace?: string | string[]
+    placeholders?: Record<string, any>
+
+    /**
+     * Allows HTML tags in the translation string to be rendered as HTML.  Default is false.
+     */
+    renderHtml?: boolean
+}>
+
+export const Translateable: Component<TranslateableProps> = (props) => {
+    const { t } = useTranslation(props.namespace);
+    let spanRef: HTMLSpanElement | undefined;
+
+    const translation = createMemo(() => t(props.key, {
+        ...(props.placeholders || {}),
+        escapeValue: !props.renderHtml,
+    }));
+
+    createEffect(() => {
+        const _translation = translation();
+        if (props.renderHtml && /<\/?[a-z][\s\S]*>/i.test(_translation) && spanRef) {
+            spanRef.innerHTML = _translation;
+        } else if (spanRef) {
+            spanRef.textContent = _translation;
+        }
+    });
+
+    return <span ref={spanRef}>{translation()}</span>;
 }

@@ -36,27 +36,27 @@
         "default": "./dist/index/index.js"
       }
     },
-    "./i18next-context": {
+    "./i18next": {
       "solid": {
-        "development": "./dist/i18next-context/dev.jsx",
-        "import": "./dist/i18next-context/index.jsx"
+        "development": "./dist/i18next/dev.jsx",
+        "import": "./dist/i18next/index.jsx"
       },
       "development": {
         "import": {
-          "types": "./dist/i18next-context/index.d.ts",
-          "default": "./dist/i18next-context/dev.js"
+          "types": "./dist/i18next/index.d.ts",
+          "default": "./dist/i18next/dev.js"
         }
       },
       "import": {
-        "types": "./dist/i18next-context/index.d.ts",
-        "default": "./dist/i18next-context/index.js"
+        "types": "./dist/i18next/index.d.ts",
+        "default": "./dist/i18next/index.js"
       }
     }
   },
   "typesVersions": {
     "*": {
-      "i18next-context": [
-        "./dist/i18next-context/index.d.ts"
+      "i18next": [
+        "./dist/i18next/index.d.ts"
       ]
     }
   },
