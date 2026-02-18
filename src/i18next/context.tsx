@@ -36,6 +36,7 @@ export type I18NextContextProps = ParentProps<{
     projectId: string
     apiKey: string
     host?: string
+    debug?: boolean
 }>
 
 type ResourceRequest = {
@@ -48,17 +49,6 @@ type NamespaceId = string
 
 type LoadedResources = Record<LanguageId, Record<NamespaceId, boolean>>;
 
-// i18next.init({
-//     lng: 'en', // if you're using a language detector, do not define the lng option
-//     debug: true,
-//     resources: {
-//         en: {
-//             translation: {
-//                 "key": "hello world"
-//             }
-//         }
-//     }
-// });
 
 export type I18NextContext = {
     loading: Accessor<boolean>
@@ -169,7 +159,7 @@ export const I18NextContext: Component<I18NextContextProps> = (props) => {
         if (!_projectInfo) return;
 
         const options = {
-            debug: true,
+            debug: props.debug,
             lng: getInitialLanguage(_projectInfo.targetLanguages) || _projectInfo.sourceLanguage.code || 'en',
             supportedLngs: [_projectInfo.sourceLanguage.code].concat(_projectInfo.targetLanguages.map(lang => lang.code)),
             fallbackLng: 'en',
