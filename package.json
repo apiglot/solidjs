@@ -1,6 +1,9 @@
 {
   "name": "@apiglot/solidjs",
   "version": "0.1.0",
+  "publishConfig": {
+    "access": "public"
+  },
   "description": "SolidJS library with tools and artifacts to help you internationalize your SolidJS applications.",
   "license": "MIT",
   "author": "Apiglot",
