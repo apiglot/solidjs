@@ -62,11 +62,15 @@ export type I18NextContext = {
     loadedSignal: Accessor<LoadedResources>
     loadNamespace: (ns: string | string[]) => Promise<void>
 
-
     /**
      * Actual i18next instance being used by the context.
      */
     i18next: typeof i18next
+
+    /**
+     * Loads the raw JSON translation data for a given language and namespace.
+     */
+    loadRawJson: (langCode: string, ns: string) => Promise<Record<string, any>>
 }
 
 const Context = createContext<I18NextContext>();
@@ -154,6 +158,13 @@ export const I18NextContext: Component<I18NextContextProps> = (props) => {
         await i18next.loadNamespaces(ns);
     };
 
+    const loadRawJson = async (langCode: string, ns: string) => {
+        if (!i18next.hasResourceBundle(langCode, ns)) {
+            await i18next.reloadResources(langCode, ns);
+        }
+        return i18next.getResourceBundle(langCode, ns) as Record<string, any>;
+    }
+
     createEffect(() => {
         const _projectInfo = info();
         if (!_projectInfo) return;
@@ -193,6 +204,7 @@ export const I18NextContext: Component<I18NextContextProps> = (props) => {
         currentLanguage,
         changeLanguage,
         loadNamespace,
+        loadRawJson,
         loading: () => info.loading,
         loadedSignal,
         i18next,
